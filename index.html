@@ -20,22 +20,25 @@
             <form action="/action_page.php">
                 <label for="departure">Départ:</label><br>
                 <input type="text" id="departure" name="departure" value="Départ"><br>
-                <label for="arrival">Arriveée:</label><br>
+                <label for="arrival">Arrivée:</label><br>
                 <input type="text" id="arrival" name="arrival" value="Arrivée"><br><br>
-                <input type="submit" value="Submit">
             </form>
+			<button onclick="getStuff(1)">Rechercher</button>
         </div>
 
         <div id="result">
-            <div id="list">
-               <div class="list">
-                <!-- <label> départ</label> <label> Arrivée</label>  <label> prix</label>  <label>durée</label> -->
-               </div>
-
-            </div>
-            <div id="map"></div>
+            <table>
+				<thead>
+					<tr>
+						<th>||Heure de Départ||</th>
+						<th>||Heure D'arrivée||</th>
+						<th>||Durée||</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
         </div>
-
     </div>
 </body>
 </html>
