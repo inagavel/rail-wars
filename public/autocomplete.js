@@ -1,10 +1,17 @@
 var places = []
+var placesDep = []
+var placesArr = []
 var departure
 var arrival
 isStart = false
+var inputDep;
+var inputArr;
 
 
 $(document).ready(function() {
+
+    inputDep = $('#inputDep');
+    inputArr = $('#inputArr');
 
     $( "#inputDep" ).click(function() {
         if(this.value=='')
@@ -70,12 +77,7 @@ $(document).ready(function() {
                     b = document.createElement("DIV");
                     /*make the matching letters bold:*/
                     b.innerHTML = "<strong>" + arr[i].name.substr(0, val.length) + "</strong>";
-                    if(this.id == 'inputDep') {
-                       departure = arr[i];
-                    }
-                    else {
-                        arrival = arr[i];
-                    }
+
                     b.innerHTML += arr[i].name.substr(val.length);
                     /*insert a input field that will hold the current array item's value:*/
                     b.innerHTML += "<input type='hidden' value='" + arr[i].name + "'>";
@@ -88,6 +90,18 @@ $(document).ready(function() {
                         closeAllLists();
                     });
                     a.appendChild(b);
+                    b.addEventListener("click",function (e) {
+
+                        if(inp.id == 'inputDep') { 
+                            console.log(inputDep.val())
+                            console.log(places)
+                          departure =  findByName(inputDep.val())
+                        }
+                        else {
+                            arrival = findByName(inputArr.val())
+                        }
+
+                    });
                 }
             }
         });
@@ -139,6 +153,7 @@ $(document).ready(function() {
         function closeAllLists(elmnt) {
             /*close all autocomplete lists in the document,
             except the one passed as an argument:*/
+
             var x = document.getElementsByClassName("autocomplete-items");
             for (var i = 0; i < x.length; i++) {
                 if (elmnt != x[i] && elmnt != inp) {

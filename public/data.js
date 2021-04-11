@@ -7,9 +7,14 @@ const MAX = 10
 $(document).ready(function(){
 
     $( "#search" ).click(function() {
+        console.log('search')
         $( "#message" ).hide();
         $('#table').hide()
-        if($('#inputDep').val() !='' && $('#inputArriv').val() !='' && $('#date').val() !=''&& $('#time').val() !=''){
+        var depVal =$('#inputDep').val()
+        var arrVal = $('#inputArriv').val()
+        if( depVal!='' && arrVal !='' && $('#date').val() !=''&& $('#time').val() !=''){
+            console.log('departure' + departure)
+            console.log('arrival' +arrival)
             var date  = new Date($('#date').val());
             var time = $('#time').val().split(':');
             date.setHours(time[0])
@@ -145,4 +150,18 @@ function getAutocompleteData(start) {
             alert('server error');
         }
     });
+}
+
+function findByName(name) {
+    for (i = 0; i < places.length; i++) {
+
+        if(i<6){
+            console.log(name + " : " + places[i].name)
+        }
+        if(name  === places[i].name)
+        {
+            console.log("FIND")
+            return Object.assign({}, places[i]);
+        }
+    }
 }
