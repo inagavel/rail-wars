@@ -92,7 +92,7 @@ $(document).ready(function() {
                     a.appendChild(b);
                     b.addEventListener("click",function (e) {
 
-                        if(inp.id == 'inputDep') { 
+                        if(inp.id == 'inputDep') {
                             console.log(inputDep.val())
                             console.log(places)
                           departure =  findByName(inputDep.val())
