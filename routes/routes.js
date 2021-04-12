@@ -1,13 +1,14 @@
 var express    = require('express');
 var placeModel  = require('../models/placeModel');
 var router = express.Router();
+var i =0
 
 router.get('/home',(req,res)=>{
     res.render('index');
 });
 
 router.post('/place/addPlaces',(req,res)=>{
-    console.log(req.body)
+    console.log((++i) +": "+ req.body.name +"("+req.body.lat +", " + req.body.lon+")");
     const obj =  JSON.parse(JSON.stringify(req.body));
     res.json({msg:'success'});
 

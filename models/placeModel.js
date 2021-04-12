@@ -36,30 +36,28 @@ module.exports.getPlaceForAutocomplete = (place,cb)=>{
     console.log("Get data for autocomplete")
 
     placeModel.find({
+        //"name": new RegExp(`/${place}$/`, 'i')
         "name": new RegExp(`^${place}`, 'i')
     }, function(err, placeData) {
         if (err) {
             console.log(err)
             cb(err, null);
         } else {
-            console.log("Success")
-            console.log(placeData)
+
+            console.log(placeData.name)
             cb(null, placeData);
         }
-    });
+    }).limit(10);
 
 }
 
 
 
 module.exports.addPlaces = (place,cb)=>{
-    console.log("add data")
     place.save((err,placeData)=>{
         if(err){
             cb(err,null);
         }else{
-            console.log("Place added")
-            /*cb(null,placeData);*/
         }
     });
 }
