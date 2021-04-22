@@ -138,7 +138,7 @@ $(document).ready(function(){
             }, success: function(data){
                 console.log(data)
                 console.log(api_url);
-                var $tbody = $('tbody').empty();
+                $('#table').empty();
                 if(data.error)
                 {
                     $( "#message" ).show();
@@ -148,14 +148,107 @@ $(document).ready(function(){
                 else{
                     $.each(data.journeys, function(i, journey)
                     {
-                        var $tr = $('<tr>');
-                        $tr.append($('<td>').html(formatHour(journey.departure_date_time)));
-                        $tr.append($('<td>').html(formatHour(journey.arrival_date_time)));
-                        $tr.append($('<td>').html(journey.duration));
-                        $tbody.append($tr);
+                        var button = document.createElement("button");
+						button.innerHTML = (formatHour(journey.departure_date_time))+" --> "+(formatHour(journey.arrival_date_time));
+						button.classList.add("collapsible");
+						document.getElementById("table").appendChild(button);
+						var cont = document.createElement("div");
+						cont.classList.add("content");
+						$.each(journey.sections, function(index, section)
+						{
+							var sect = document.createElement("div");
+							sect.classList.add("section");
+							var img = document.createElement("img");
+							
+							if (section.type!="waiting")
+							{
+								//Departure and Arrival time for the current section
+								var dep_hour = document.createElement("div");
+								dep_hour.classList.add("hour");
+								dep_hour.setAttribute("style", "display: inline");
+								var arr_hour = document.createElement("div");
+								arr_hour.classList.add("hour");
+								arr_hour.setAttribute("style", "display: inline");
+								//Description (Departure/Arrival name and mode of transport
+								var desc = document.createElement("div");
+								desc.classList.add("description");
+								desc.setAttribute("style", "display: inline");
+								
+								dep_hour.innerHTML = "("+formatHour(section.departure_date_time)+")"+"    "
+								arr_hour.innerHTML = "    ("+formatHour(section.arrival_date_time)+")"
+								sect.appendChild(dep_hour);
+								desc.innerHTML = section.from && section.from.name;
+								//Changing the image based on the mode of transport
+								if (section.mode==="walking")
+								{
+									img.src = "walk.png"
+									img.setAttribute("style", "height: 1.5em");
+								}
+								if (section.mode==null && section.type=="transfer" && section.transfer_type=="walking")
+								{
+									img.src = "walk.png"
+									img.setAttribute("style", "height: 1.5em");
+								}
+								if (section.mode==null && section.type=="public_transport")
+								{
+									img.src = "train.png"
+									img.setAttribute("style", "height: 1.5em");
+									//Adding the line information based on the type of train
+									if (section.display_informations.physical_mode=="Train grande vitesse")
+									{
+										desc.innerHTML += "  TGV";
+									}
+									if (section.display_informations.physical_mode=="RER / Transilien")
+									{
+										//Line Number / Code
+										desc.innerHTML += "  "+section.display_informations.name;
+									}
+									if (section.display_informations.physical_mode=="TER / Intercités")
+									{
+										desc.innerHTML += "  TER";
+									}
+									
+								}
+								desc.appendChild(img);
+								desc.innerHTML += section.to && section.to.name;
+								sect.appendChild(desc);
+								sect.appendChild(arr_hour);
+							}
+							//Sections of type "waiting" don't have any information on arrival and departure so we just add the waiting time in minutes
+							if (section.from==null && section.type==="waiting")
+							{
+								img.src = "wait.png"
+								var dur = Math.floor(section.duration / 60);
+								img.setAttribute("style", "height: 1.5em");
+								sect.appendChild(img);
+								sect.innerHTML += " "+dur+" minutes";
+							}
 
-
+							
+							cont.appendChild(sect);
+						});					
+						
+						document.getElementById("table").appendChild(cont);
                     });
+					var coll = document.getElementsByClassName("collapsible");
+					var i;
+
+					for (i = 0; i < coll.length; i++) 
+					{
+					  coll[i].addEventListener("click", function() 
+					  {
+						this.classList.toggle("active");
+						var content = this.nextElementSibling;
+						//Toggle for the button to display and hide the content beneath it
+						if (content.style.display === "block") 
+						{
+						  content.style.display = "none";
+						} else 
+						{
+						  content.style.display = "block";
+						}
+					  });
+					}
                     $('#table').show()
                     $('#map').show()
                     $( "#message" ).hide();
