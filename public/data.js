@@ -1,23 +1,27 @@
 places = []
+//Multiple keys for the API in case one of them doesn't work
 key1 = 'af864a51-8558-433b-a2f2-8da73be63d61'
 key2 = '08f0fdf0-8f0a-43e5-9850-c83607a4237b'
 key3 = 'fb897a73-e3d9-4e84-8243-e34362942d99'
+//Number of parsed stop areas in the getStuff function
 var nbElement = 0
+//Number of journeys to request in the getJourney function
 const MAX = 6
-var isCreated= false;
-page_number = 0
 $(document).ready(function(){
-
+	//When the search is initiated
     $( "#search" ).click(function() {
 
         console.log('search')
+		//Hiding all previous search results
         $("#result-fail").hide();
         $( "#message" ).hide();
         $('#table').hide()
         $('#map').hide()
         $('#search-fail').hide()
+		//Getting the departure and arrival names from the input field
         var depVal =$('#inputDep').val()
         var arrVal = $('#inputArriv').val()
+		//Checking if the departure and arrival names are correct
         if( depVal!='' && arrVal !='' && $('#date').val() !=''&& $('#time').val() !=''){
             departure =  findByName( $( "#inputDep" ).val(), depPlacesOb)
             arrival =  findByName( $( "#inputArr" ).val(),arrPlacesOb)
@@ -26,6 +30,7 @@ $(document).ready(function(){
             var time = $('#time').val().split(':');
             date.setHours(time[0])
             date.setMinutes(time[1])
+			//Return an error message on the page if the departure and arrival on the input field are not in the database
             if(departure === undefined || arrival === undefined || departure.name === arrival.name ) {
                 $('#search-fail').show()
                 return
@@ -44,8 +49,8 @@ $(document).ready(function(){
     getdata()
 
 
-
-
+	//
+	//Function to get data into the database if it isn't set up yet thanks to getStuff
     function getdata(){
         $.ajax({
             url:'place/getPlaces',
@@ -71,8 +76,8 @@ $(document).ready(function(){
         });
     }
 
-
-
+	//
+	//Function to get data from all the stop areas (name of stop area, longitude and latitude)
     function getStuff(page)
     {
         var api_url = 'https://api.sncf.com/v1/coverage/sncf/stop_areas?count=500&start_page='+page
@@ -117,6 +122,7 @@ $(document).ready(function(){
 
 
                 }
+				//Getting the stop areas of the next page if it exists
                if(data.pagination.items_on_page > 0){
                     getStuff(page+1);
                 }
@@ -129,11 +135,14 @@ $(document).ready(function(){
             }
         })
     }
-
+	//
+	//Function to transform the obtained date into a readable format
     function formatHour(navitiaDate) {
         return navitiaDate.substr(9).match(/.{2}/g).join(':');
     }
-
+	
+	//
+	//Function to get and display information on a journey using the longitude and latitude
     function getJourney(deplon, deplat, arrlon, arrlat,datatime)
     {
         console.log("Journey")
@@ -155,24 +164,32 @@ $(document).ready(function(){
                 else{
                     $.each(data.journeys, function(i, journey)
                     {
+						//Splitting the time to remove the seconds and only have hours and minuts
                         token1 = formatHour(journey.departure_date_time).split(':')
                         token2 = formatHour(journey.arrival_date_time).split(':')
+						//Creating a button div with the departure, arrival time and duration of the journey
                         let btnhtml = ' <div class="place-title"> \n' +
                             '           <h4>' +token1[0]+'H'+ token1[1]+' </h4> \n' +
                             '            <img    src="/dir.png" alt="sncf" class="img-dir"> \n' +
                             '            <h4>' +token2[0]+'H'+ token2[1]+' </h4> \n'+
-                            '<img    src="/timer.png" alt="timer" class="icon icon-timer"> \n' +
-                                            '<h4 class="duration"> '+Math.floor(journey.duration / 60) +' min  </h4>\n' +
-
+                            '			<img    src="/timer.png" alt="timer" class="icon icon-timer"> \n' +
+                            '			<h4 class="duration"> '+Math.floor(journey.duration / 60) +' min  </h4>\n' +
                             '        </div>'
                         var button = document.createElement("div");
 						button.innerHTML = btnhtml
 						button.classList.add("collapsible");
+						//Adding the button to the results table
 						document.getElementById("table").appendChild(button);
+						//Creating a content div that will be appended to the button
+						//The content will be able to be displayed by clicking on the button
 						var cont = document.createElement("div");
 						cont.classList.add("content");
+						//Going through all sections of a journey
 						$.each(journey.sections, function(index, section)
 						{
+							//Creating a section div
+							//The content div will be comprised of multiple sections
+							//Each section will be comprised of a departure and arrival time and a description
 							var sect = document.createElement("div");
 							sect.classList.add("section");
 							var img = document.createElement("img");
@@ -186,7 +203,7 @@ $(document).ready(function(){
 								var arr_hour = document.createElement("div");
 								arr_hour.classList.add("hour");
 								arr_hour.setAttribute("style", "display: inline");
-								//Description (Departure/Arrival name and mode of transport
+								//Description (Departure/Arrival name and mode of transport as an image) for the current section
 								var desc = document.createElement("div");
 								desc.classList.add("description");
 								desc.setAttribute("style", "display: inline");
@@ -232,6 +249,7 @@ $(document).ready(function(){
 										desc.innerHTML += "  TER";
 									}
 								}
+								//Addding everything else to the section
 								desc.appendChild(img);
 								desc.innerHTML += section.to && section.to.name;
 								sect.appendChild(desc);
@@ -241,25 +259,27 @@ $(document).ready(function(){
 							if (section.from==null && section.type==="waiting")
 							{
 								img.src = "wait.png"
+								//format the seconds into minutes
 								let dur = Math.floor(section.duration / 60);
                                 img.classList.add("icon");
                                 img.setAttribute("alt", "wait");
-
                                 sect.appendChild(img);
 								sect.innerHTML += " "+dur+" minutes";
 							}
 
-							
+							//Adding one section to the content div
 							cont.appendChild(sect);
 						});					
-						
+						//Adding the content to the table, this way the table will be comprised of a button followed by a content div followed by a button followed by a content div etc....
 						document.getElementById("table").appendChild(cont);
                     });
+					//Getting all buttons
 					var coll = document.getElementsByClassName("collapsible");
 					var i;
 
 					for (i = 0; i < coll.length; i++) 
 					{
+					//Adding a toggle function for each button
 					  coll[i].addEventListener("click", function() 
 					  {
 						this.classList.toggle("active");
@@ -272,6 +292,7 @@ $(document).ready(function(){
 						{
 						  content.style.display = "block";
 						}
+						//Recalculating the height of the buttons + cotents + the google map to dynamicaly change the size of the results div
 						  const height1 = document.querySelector('#table').offsetHeight
                           const height2 = document.querySelector('#map').offsetHeight
                           let total = height1 + height2 + 50
@@ -287,6 +308,7 @@ $(document).ready(function(){
                     $('#map').show()
                     $( "#message" ).hide();
                 }
+				//Google Map
                 initMap()
                 $("#loader").hide();
             }, error:function(response) {
@@ -301,6 +323,8 @@ $(document).ready(function(){
 
     }
 });
+//
+//Get the first 10 elements starting with the search query for the autocomplete
 function getAutocompleteData(start,isDep) {
     console.log("start : " +start)
     $.ajax({
@@ -333,7 +357,8 @@ function getAutocompleteData(start,isDep) {
         }
     });
 }
-
+//
+//Get an object from a name
 function findByName(name, places) {
     for (i = 0; i < places.length; i++) {
 
