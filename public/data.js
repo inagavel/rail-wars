@@ -46,14 +46,14 @@ $(document).ready(function(){
     });
 
 
-    getdata()
+    createDatabaseFromAPI()
 
 
 	//
-	//Function to get data into the database if it isn't set up yet thanks to getStuff
-    function getdata(){
+	//Function to check if database exists if it isn't set up yet thanks to getDataFromAPI
+    function createDatabaseFromAPI(){
         $.ajax({
-            url:'place/getPlaces',
+            url:'place/createDatabase',
             method:'get',
             dataType:'json',
             success:function(response){
@@ -65,7 +65,7 @@ $(document).ready(function(){
                          document.getElementById("date").disabled = true;
                          document.getElementById("time").disabled = true;
                          $("#loader").show();
-                         getStuff(1)
+                         getDataFromAPI(1)
                      }
                  }
             },
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
 	//
 	//Function to get data from all the stop areas (name of stop area, longitude and latitude)
-    function getStuff(page)
+    function getDataFromAPI(page)
     {
         var api_url = 'https://api.sncf.com/v1/coverage/sncf/stop_areas?count=500&start_page='+page
         $.ajax({
@@ -124,7 +124,7 @@ $(document).ready(function(){
                 }
 				//Getting the stop areas of the next page if it exists
                if(data.pagination.items_on_page > 0){
-                    getStuff(page+1);
+                   getDataFromAPI(page+1);
                 }
 
               //  $("#loader").hide();
@@ -295,13 +295,8 @@ $(document).ready(function(){
 						//Recalculating the height of the buttons + cotents + the google map to dynamicaly change the size of the results div
 						  const height1 = document.querySelector('#table').offsetHeight
                           const height2 = document.querySelector('#map').offsetHeight
-                          let total = height1 + height2 + 50
-                          console.log('sum height: ' + height1 + height2)
+                          let total = height1 + height2
                           document.getElementById('result').setAttribute('style', 'height:'+total)
-                          const height3 = document.querySelector('#result').offsetHeight
-                          console.log('result height: ' + height3)
-                         // $('#result')
-
                       });
 					}
                     $('#table').show()
@@ -312,7 +307,6 @@ $(document).ready(function(){
                 initMap()
                 $("#loader").hide();
             }, error:function(response) {
-                console.log(response)
                 $("#result-fail").show();
                 $("#loader").hide();
 

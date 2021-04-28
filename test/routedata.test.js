@@ -1,7 +1,14 @@
+/**
+ * This file is used to test all route data manage
+ */
+
 require('../models/db')
 var placeModel  = require('../models/placeModel');
 
 const assert = require('assert');
+/**
+ * Testing Adding data to database
+ */
 describe('Adding data to database', () => {
     it('should return True', () => {
     var isInserted = false;
@@ -23,7 +30,9 @@ describe('Adding data to database', () => {
 
 
     });
-
+    /**
+     * Testing AGet the first 10 places started by Par
+     */
     describe('Get the first 10 places started by Par', () => {
         it('should return 10', () => {
 
@@ -41,7 +50,9 @@ describe('Adding data to database', () => {
 
 
         });
-
+    /**
+     * Testing AGet the first 10 places started by Par
+     */
     describe('Get All data', () => {
         it('should return True', () => {
             var isOk = false;

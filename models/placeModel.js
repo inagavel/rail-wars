@@ -1,4 +1,8 @@
 const mongoose = require('mongoose')
+
+/**
+ * schema to manage data place
+ **/
 const placeSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -21,8 +25,12 @@ const placeSchema = new mongoose.Schema({
 
 const placeModel = module.exports = mongoose.model('place', placeSchema);
 
+/**
+ this method get data from database
+ is used to verify if the database has created
+ **/
 module.exports.getPlace = (cb)=>{
-    placeModel.find((err,placeData)=>{
+    placeModel.findOne((err,placeData)=>{
         if(err){
             cb(err,null);
         }else{
@@ -31,6 +39,10 @@ module.exports.getPlace = (cb)=>{
     });
 }
 
+/**
+ this method get the 10 last places started by place
+ from database to help user to complete the search of textfield
+ **/
 module.exports.getPlaceForAutocomplete = (place,cb)=>{
     placeModel.find({
         //"name": new RegExp(`/${place}$/`, 'i')
@@ -46,7 +58,10 @@ module.exports.getPlaceForAutocomplete = (place,cb)=>{
     }).limit(10);
 
 }
-
+/**
+ this method store to database a place
+ is used to create and store database
+ **/
 module.exports.addPlaces = (place,cb)=>{
     place.save((err,placeData)=>{
         if(err){

@@ -1,3 +1,6 @@
+/**
+ * this method is google maps direction initialisation
+ */
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -5,12 +8,15 @@ function initMap() {
         zoom: 8,
         center: {lat: 46.2276, lng: 2.2137}
     });
+    //display
     directionsDisplay.setMap(map);
 
     calculateAndDisplayRoute(directionsService, directionsDisplay);
 
 }
-
+/**
+ * this method calculate abd display the route in maps
+ */
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     if(departure != undefined){
         directionsService.route({

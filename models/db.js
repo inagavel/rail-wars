@@ -1,3 +1,7 @@
+/**
+ * Here we use mongoose module to connect to database
+ * @type {module:mongoose}
+ */
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/railWars', {
     useNewUrlParser: true,
