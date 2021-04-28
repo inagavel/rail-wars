@@ -47,13 +47,11 @@ describe('Adding data to database', () => {
 
                 });
             });
-
-
         });
     /**
      * Testing AGet the first 10 places started by Par
      */
-    describe('Get All data', () => {
+    describe('check database exists', () => {
         it('should return True', () => {
             var isOk = false;
 
