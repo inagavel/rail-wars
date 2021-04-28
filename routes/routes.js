@@ -54,7 +54,6 @@ router.get('/place/createDatabase',(req,res)=>{
  */
 router.post('/place/autocomplete',(req,res)=>{
     const place = req.body.start
-    console.log("place : " + place);
     placeModel.getPlaceForAutocomplete(place,(err,placeData)=>{
         if(err){
             res.json({msg:'error'});
