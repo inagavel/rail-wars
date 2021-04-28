@@ -62,7 +62,7 @@ describe('Adding data to database', () => {
                     if (placeData.length > 0 )
                         isOk = true
                 }
-                assert.strictEqual(isOk, true);
+                assert.equal(isOk, true);
             });
         });
     });
