@@ -22,7 +22,6 @@
 <div id="container">
     <div class="header">
         <img src="/sncf.jpeg" alt="sncf" class="responsive">
-
         <div class="autocomplete" id="form">
             <div id="dep-Arr">
                 <input id="inputDep" class="myInput" type="text" name="departure" placeholder="Departure">
@@ -36,6 +35,7 @@
             <img src="/search.png" alt="search" id="search">
         </div>
     </div>
+
     <div id="result">
         <div id="table">
         </div>
@@ -60,9 +60,14 @@
             <div id="db-fail" class="alert alert-danger" role="alert">
                 <b> Database creation failed !! </b> <br>
             </div>
+            <div id="search-fail" class="alert alert-danger" role="alert">
+                <b> Incorrect search query !! </b> <br>
+            </div>
+            <div id="result-fail" class="alert alert-danger" role="alert">
+                <b> Incorrect search query or the date is outdated !! </b> <br>
+                <b> Please enter the current or future date</b> <br>
+            </div>
         </div>
-
-
     </div>
 </div>
 

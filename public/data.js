@@ -3,7 +3,7 @@ key1 = 'af864a51-8558-433b-a2f2-8da73be63d61'
 key2 = '08f0fdf0-8f0a-43e5-9850-c83607a4237b'
 key3 = 'fb897a73-e3d9-4e84-8243-e34362942d99'
 var nbElement = 0
-const MAX = 10
+const MAX = 6
 var isCreated= false;
 page_number = 0
 $(document).ready(function(){
@@ -11,20 +11,27 @@ $(document).ready(function(){
     $( "#search" ).click(function() {
 
         console.log('search')
+        $("#result-fail").hide();
         $( "#message" ).hide();
         $('#table').hide()
         $('#map').hide()
+        $('#search-fail').hide()
         var depVal =$('#inputDep').val()
         var arrVal = $('#inputArriv').val()
         if( depVal!='' && arrVal !='' && $('#date').val() !=''&& $('#time').val() !=''){
             departure =  findByName( $( "#inputDep" ).val(), depPlacesOb)
             arrival =  findByName( $( "#inputArr" ).val(),arrPlacesOb)
-            $("#loader").show();
             $('#loader-text').hide()
             var date  = new Date($('#date').val());
             var time = $('#time').val().split(':');
             date.setHours(time[0])
             date.setMinutes(time[1])
+            if(departure === undefined || arrival === undefined || departure.name === arrival.name ) {
+                $('#search-fail').show()
+                return
+            }
+            $("#loader").show();
+
             getJourney(departure.lon, departure.lat, arrival.lon, arrival.lat,date.toJSON())
         }
         else
@@ -148,8 +155,18 @@ $(document).ready(function(){
                 else{
                     $.each(data.journeys, function(i, journey)
                     {
-                        var button = document.createElement("button");
-						button.innerHTML = (formatHour(journey.departure_date_time))+" --> "+(formatHour(journey.arrival_date_time));
+                        token1 = formatHour(journey.departure_date_time).split(':')
+                        token2 = formatHour(journey.arrival_date_time).split(':')
+                        let btnhtml = ' <div class="place-title"> \n' +
+                            '           <h4>' +token1[0]+'H'+ token1[1]+' </h4> \n' +
+                            '            <img    src="/dir.png" alt="sncf" class="img-dir"> \n' +
+                            '            <h4>' +token2[0]+'H'+ token2[1]+' </h4> \n'+
+                            '<img    src="/timer.png" alt="timer" class="icon icon-timer"> \n' +
+                                            '<h4 class="duration"> '+Math.floor(journey.duration / 60) +' min  </h4>\n' +
+
+                            '        </div>'
+                        var button = document.createElement("div");
+						button.innerHTML = btnhtml
 						button.classList.add("collapsible");
 						document.getElementById("table").appendChild(button);
 						var cont = document.createElement("div");
@@ -182,18 +199,25 @@ $(document).ready(function(){
 								if (section.mode==="walking")
 								{
 									img.src = "walk.png"
-									img.setAttribute("style", "height: 1.5em");
-								}
+                                    img.classList.add("icon");
+                                    img.setAttribute("alt", "walk");
+
+                                }
 								if (section.mode==null && section.type=="transfer" && section.transfer_type=="walking")
 								{
 									img.src = "walk.png"
-									img.setAttribute("style", "height: 1.5em");
-								}
+									img.classList.add("icon");
+                                    img.setAttribute("alt", "walk");
+
+                                }
 								if (section.mode==null && section.type=="public_transport")
 								{
 									img.src = "train.png"
-									img.setAttribute("style", "height: 1.5em");
-									//Adding the line information based on the type of train
+                                    img.classList.add("icon");
+                                    img.setAttribute("alt", "train");
+
+
+                                    //Adding the line information based on the type of train
 									if (section.display_informations.physical_mode=="Train grande vitesse")
 									{
 										desc.innerHTML += "  TGV";
@@ -207,7 +231,6 @@ $(document).ready(function(){
 									{
 										desc.innerHTML += "  TER";
 									}
-									
 								}
 								desc.appendChild(img);
 								desc.innerHTML += section.to && section.to.name;
@@ -218,9 +241,11 @@ $(document).ready(function(){
 							if (section.from==null && section.type==="waiting")
 							{
 								img.src = "wait.png"
-								var dur = Math.floor(section.duration / 60);
-								img.setAttribute("style", "height: 1.5em");
-								sect.appendChild(img);
+								let dur = Math.floor(section.duration / 60);
+                                img.classList.add("icon");
+                                img.setAttribute("alt", "wait");
+
+                                sect.appendChild(img);
 								sect.innerHTML += " "+dur+" minutes";
 							}
 
@@ -247,7 +272,16 @@ $(document).ready(function(){
 						{
 						  content.style.display = "block";
 						}
-					  });
+						  const height1 = document.querySelector('#table').offsetHeight
+                          const height2 = document.querySelector('#map').offsetHeight
+                          let total = height1 + height2 + 50
+                          console.log('sum height: ' + height1 + height2)
+                          document.getElementById('result').setAttribute('style', 'height:'+total)
+                          const height3 = document.querySelector('#result').offsetHeight
+                          console.log('result height: ' + height3)
+                         // $('#result')
+
+                      });
 					}
                     $('#table').show()
                     $('#map').show()
@@ -255,8 +289,15 @@ $(document).ready(function(){
                 }
                 initMap()
                 $("#loader").hide();
+            }, error:function(response) {
+                console.log(response)
+                $("#result-fail").show();
+                $("#loader").hide();
+
             }
+
         })
+
 
     }
 });

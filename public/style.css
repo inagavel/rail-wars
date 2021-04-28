@@ -9,8 +9,17 @@ body{
     margin-right: auto;
     width: 70%;
 }
+
+.main-place{
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+#main-place2 {
+    display: flex;
+}
 #map {
-    height: 60%;
+    height: 45em;
     width: auto;
     display: none;
 }
@@ -44,7 +53,37 @@ text-align: center;
     width: 100%;
 }
 
-
+.place-title
+{
+    font-weight: 20;
+    display: flex;
+    align-items: center;
+}
+.main-text{
+    margin-left: 20px;
+}
+#main-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    width: 32%;
+    background-color: #F1F4F4;
+    border-radius: 5px;
+}
+#place-container{
+    display: flex;
+    align-items: center;
+}
+.img-dir{
+    margin: 15px;
+    width: 44px;
+    height: 30px;
+}
+.img-result{
+    width: 45px;
+    height: 45px;
+}
 
 #result{
     background-color: white;
@@ -52,7 +91,7 @@ text-align: center;
     margin-left: auto;
     margin-right: auto;
     width: 70%;
-    height: 700px;
+    padding-bottom: 100px;
 }
 
 
@@ -82,9 +121,11 @@ body {
 #loader{
     margin-top: 30px;
 }
-#loader,#db-fail,#db-success {
+#loader,#db-fail,#search-fail,#result-fail,#db-success {
     display: none;
 }
+
+
 
 input {
     border: 1px solid transparent;
@@ -188,7 +229,9 @@ input[type=submit] {
         height: 30px;
     }
 }
-
+.duration{
+    margin-left: 1%;
+}
 .content {
   padding-top: 20px;
   padding-bottom: 10px;
@@ -196,12 +239,19 @@ input[type=submit] {
 
   display: none;
   overflow: hidden;
-  background-color: #f1f1f1;
+    background-color: #EFEFEF;
  }
+.icon{
+    height: 1.5em;
+}
+.icon-timer{
+    margin-left: 5%;
+    margin-bottom: 10px;
+}
  
  .collapsible {
-  background-color: #777;
-  color: white;
+  background-color: #F1F4F4;
+ /* color: black;*/
   cursor: pointer;
   padding: 18px;
   width: 100%;
@@ -210,3 +260,4 @@ input[type=submit] {
   outline: none;
   font-size: 15px;
 }
+

@@ -22,7 +22,6 @@ const placeSchema = new mongoose.Schema({
 const placeModel = module.exports = mongoose.model('place', placeSchema);
 
 module.exports.getPlace = (cb)=>{
-    console.log("Get data")
     placeModel.find((err,placeData)=>{
         if(err){
             cb(err,null);
@@ -33,8 +32,6 @@ module.exports.getPlace = (cb)=>{
 }
 
 module.exports.getPlaceForAutocomplete = (place,cb)=>{
-    console.log("Get data for autocomplete")
-
     placeModel.find({
         //"name": new RegExp(`/${place}$/`, 'i')
         "name": new RegExp(`^${place}`, 'i')
@@ -44,14 +41,11 @@ module.exports.getPlaceForAutocomplete = (place,cb)=>{
             cb(err, null);
         } else {
 
-            console.log(placeData.name)
             cb(null, placeData);
         }
     }).limit(10);
 
 }
-
-
 
 module.exports.addPlaces = (place,cb)=>{
     place.save((err,placeData)=>{

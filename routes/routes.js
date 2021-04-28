@@ -8,7 +8,7 @@ router.get('/home',(req,res)=>{
 });
 
 router.post('/place/addPlaces',(req,res)=>{
-    console.log((++i) +": "+ req.body.name +"("+req.body.lat +", " + req.body.lon+")");
+
     const obj =  JSON.parse(JSON.stringify(req.body));
     res.json({msg:'success'});
 

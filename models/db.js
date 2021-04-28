@@ -12,5 +12,4 @@ mongoose.connect('mongodb://localhost:27017/railWars', {
 
     }
 })
-//require('./student.model')
 require('./placeModel')
